@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require("cors")
 const app = express();
 
-const PORT = 3000;
+const PORT = 4000;
 
 // Middleware (optional but common)
 app.use(express.json());
@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 
 // Another route
 app.get('/api', (req, res) => {
-  res.json({ message: 'API is working 🚀' });
+  res.json({ message: 'API is working 🚀', port:PORT });
 });
 
 // Start server
