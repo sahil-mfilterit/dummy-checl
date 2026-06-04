@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require("cors");
 
 const app = express();
-const PORT = 4000;
+const PORT = 3000;
 
 // Health API
 app.get('/health', (req, res) => {
