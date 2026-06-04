@@ -1,24 +1,35 @@
-const express = require('express');
-const cors = require("cors")
-const app = express();
+const { createClient } = require("redis");
 
-const PORT = 4000;
+async function main() {
+  const client = createClient({
+    url: "redis://13.234.5.85:6379",
+  });
 
-// Middleware (optional but common)
-app.use(express.json());
-app.use(cors())
+  client.on("error", (err) => {
+    console.error("Redis Error:", err);
+  });
 
-// Simple route
-app.get('/', (req, res) => {
-  res.send('Hello World from Express!');
-});
+  try {
+    console.log("Connecting to Redis...");
 
-// Another route
-app.get('/api', (req, res) => {
-  res.json({ message: 'API is working 🚀', port:PORT });
-});
+    await client.connect();
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+    console.log("Connected!");
+
+    await client.set("user:name", "sahil");
+
+    console.log("SET successful");
+
+    const value = await client.get("user:name");
+
+    console.log("GET result:", value);
+
+    await client.quit();
+
+    console.log("Connection closed");
+  } catch (err) {
+    console.error("Failed:", err);
+  }
+}
+
+main();

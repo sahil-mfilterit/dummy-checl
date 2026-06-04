@@ -2,17 +2,17 @@ version: "3.8"
 
 services:
   redis:
-    image: redis:7
+    image: redis:7-alpine
     container_name: redis
-    ports:
-      - "6379:6379"
     restart: unless-stopped
 
-  redisinsight:
-    image: redis/redisinsight:latest
-    container_name: redisinsight
     ports:
-      - "4000:5540"
-    restart: unless-stopped
-    depends_on:
-      - redis
+      - "4000:6379"
+
+    volumes:
+      - redis-data:/data
+
+    command: redis-server --appendonly yes
+
+volumes:
+  redis-data:
