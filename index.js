@@ -1,8 +1,12 @@
 const { createClient } = require("redis");
 
-async function main() {
+(async () => {
   const client = createClient({
-    url: "redis://13.234.5.85:6379",
+    socket: {
+      host: "13.234.5.85",
+      port: 4000,
+      connectTimeout: 5000,
+    },
   });
 
   client.on("error", (err) => {
@@ -10,26 +14,22 @@ async function main() {
   });
 
   try {
-    console.log("Connecting to Redis...");
+    console.log("Connecting...");
 
     await client.connect();
 
     console.log("Connected!");
 
-    await client.set("user:name", "sahil");
+    const result = await client.set("test-node", "sahil");
 
-    console.log("SET successful");
+    console.log("SET:", result);
 
-    const value = await client.get("user:name");
+    const value = await client.get("test-node");
 
-    console.log("GET result:", value);
+    console.log("GET:", value);
 
     await client.quit();
-
-    console.log("Connection closed");
   } catch (err) {
-    console.error("Failed:", err);
+    console.error("FAILED:", err);
   }
-}
-
-main();
+})();
